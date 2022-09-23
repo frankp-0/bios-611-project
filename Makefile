@@ -4,12 +4,14 @@ PHONY: preprocess
 clean:
 	rm interData/*
 
+# perform all preprocessing steps
 preprocess:\
 	interData/ids.txt \
 	interData/metabolon.txt \
 	interData/broad.txt \
 
 # generates single table linking subject and TOPMED IDs for both platforms
+# makes opinionated choice to exclude duplicated IDs within each platform (I am unsure what these duplicated IDs mean)
 interData/ids.txt: sourceData/metabolon_ids.csv sourceData/broad_ids.csv
 	mkdir -p interData
 	cd src; Rscript getIDs.R
