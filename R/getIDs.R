@@ -1,8 +1,8 @@
 library(tidyverse)
 library(magrittr)
 
-metIDTable <- read_csv("../sourceData/metabolon_ids.csv", col_types=cols())[,1:2]
-broadIDTable <- read_csv("../sourceData/broad_ids.csv", col_types=cols())[,1:2]
+metIDTable <- read_csv("sourceData/metabolon_ids.csv", col_types=cols())[,1:2]
+broadIDTable <- read_csv("sourceData/broad_ids.csv", col_types=cols())[,1:2]
 names(broadIDTable) <- c("subject_id", "TOMID")
 
 metDupID <- metIDTable$subject_id[duplicated(metIDTable$subject_id)]
@@ -17,4 +17,4 @@ names(broadIDTable)[2] <- "Broad"
 IDTable <- inner_join(metIDTable, broadIDTable, by = "subject_id") %>%
   gather(key="Platform", value="ID", Metabolon, Broad)
 
-write_tsv(IDTable, "../interData/ids.txt")
+write_tsv(IDTable, "interData/ids.txt")

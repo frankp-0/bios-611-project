@@ -33,10 +33,10 @@ readBroad <- function(file){
   return(df)
 }
 
-C18_neg <- readBroad("../sourceData/C18-neg.txt")
-C8_pos <- readBroad("../sourceData/C8-pos.txt")
-HILIC_pos <- readBroad("../sourceData/HILIC-pos.txt")
-Amide_neg <- readBroad("../sourceData/Amide-neg.txt")
+C18_neg <- readBroad("sourceData/C18-neg.txt")
+C8_pos <- readBroad("sourceData/C8-pos.txt")
+HILIC_pos <- readBroad("sourceData/HILIC-pos.txt")
+Amide_neg <- readBroad("sourceData/Amide-neg.txt")
 
 broadData <- HILIC_pos %>% inner_join(C18_neg, by="ID") %>%
   inner_join(C8_pos, by="ID") %>%
@@ -46,4 +46,4 @@ colRemove <- names(broadData)[endsWith(names(broadData), ".y")]
 broadData <- broadData %>% select(-all_of(colRemove))
 names(broadData) <- str_remove(names(broadData), ".x")
 
-write_tsv(broadData, "../interData/broad.txt")
+write_tsv(broadData, "interData/broad.txt")
