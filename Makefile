@@ -1,7 +1,13 @@
 PHONY: clean
+PHONY: preprocess
 
 clean:
 	rm interData/*
+
+preprocess:\
+	interData/ids.txt \
+	interData/metabolon.txt \
+	interData/broad.txt \
 
 # generates single table linking subject and TOPMED IDs for both platforms
 interData/ids.txt: sourceData/metabolon_ids.csv sourceData/broad_ids.csv
