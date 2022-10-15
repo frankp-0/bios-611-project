@@ -1,32 +1,32 @@
-PHONY: clean
-PHONY: preprocess
+PHONY : clean
+PHONY : getData
 
-clean:
-	rm interData/*
+clean :
+	rm -rf sourceData/*
+	rm -rf interData/*
 
-# perform all preprocessing steps
-preprocess:\
-	interData/ids.txt \
-	interData/metabolon.txt \
-	interData/broad.txt \
-
-# generates single table linking subject and TOPMED IDs for both platforms
-# makes opinionated choice to exclude duplicated IDs within each platform (I am unsure what these duplicated IDs mean)
-interData/ids.txt: sourceData/metabolon_ids.csv sourceData/broad_ids.csv
+.created-dired :
+	mkdir -p sourceData
 	mkdir -p interData
-	Rscript ./R/getIDs.R
+	touch .created-dirs
 
-# generates cleaned Metabolon data file
-# removes metabolites with low confidence (of identification)
-# removes metabolites with high missingness (>80%)
-interData/metabolon.txt: sourceData/Metabolon.txt sourceData/metabolonAnnotation.txt
-	mkdir -p interData
-	Rscript ./R/cleanMetabolon.R
+getData : neg.txt \
+	neg_metadata.txt \
+	polar.txt \
+	polar_metadata.txt \
+	pos_early.txt \
+	pos_early_metadata.txt \
+	pos_late.txt \
+	pos_polar_metadata.txt \
+	study_design.txt
 
-# generates cleaned Broad data file
-# removes header info and transposes Broad files
-# joins Broad analyses to single table, prioritizing Amide-neg assay for duplicate metabolites
-interData/broad.txt:\
-	sourceData/C8-pos.txt sourceData/C18-neg.txt sourceData/HILIC-pos.txt sourceData/Amide-neg.txt
-	mkdir -p interData
-	Rscript ./R/cleanBroad.R
+neg.txt \
+	neg_metadata.txt \
+	polar.txt \
+	polar_metadata.txt \
+	pos_early.txt \
+	pos_early_metadata.txt \
+	pos_late.txt \
+	pos_polar_metadata.txt \
+	study_design.txt :
+		bash src/getData.sh
