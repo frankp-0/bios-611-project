@@ -5,28 +5,32 @@ clean :
 	rm -rf sourceData/*
 	rm -rf interData/*
 
-.created-dired :
+# creates necessary directories
+.created-dirs :
 	mkdir -p sourceData
 	mkdir -p interData
 	touch .created-dirs
 
-getData : neg.txt \
-	neg_metadata.txt \
-	polar.txt \
-	polar_metadata.txt \
-	pos_early.txt \
-	pos_early_metadata.txt \
-	pos_late.txt \
-	pos_polar_metadata.txt \
-	study_design.txt
+# phony target which depends on source data
+getData : src/getData.sh .created-dirs \
+	sourceData/neg.txt \
+	sourceData/neg_metadata.txt \
+	sourceData/polar.txt \
+	sourceData/polar_metadata.txt \
+	sourceData/pos_early.txt \
+	sourceData/pos_early_metadata.txt \
+	sourceData/pos_late.txt \
+	sourceData/pos_polar_metadata.txt \
+	sourceData/study_design.txt
 
-neg.txt \
-	neg_metadata.txt \
-	polar.txt \
-	polar_metadata.txt \
-	pos_early.txt \
-	pos_early_metadata.txt \
-	pos_late.txt \
-	pos_polar_metadata.txt \
-	study_design.txt :
+# gets source data. use "getData" phony target when running make
+sourceData/neg.txt \
+	sourceData/neg_metadata.txt \
+	sourceData/polar.txt \
+	sourceData/polar_metadata.txt \
+	sourceData/pos_early.txt \
+	sourceData/pos_early_metadata.txt \
+	sourceData/pos_late.txt \
+	sourceData/pos_polar_metadata.txt \
+	sourceData/study_design.txt :
 		bash src/getData.sh
