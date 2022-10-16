@@ -7,7 +7,10 @@ readData <- function(assay){
   dfFile <- paste0("sourceData/", assay, ".txt")
   ID <- read.table(dfFile, nrows=1) %>% unlist()
   dfNames <- c("Metabolite", ID)
-  df <- read_tsv(dfFile, col_names = dfNames, skip = 1, col_types = cols())
+  df <- read_tsv(dfFile,
+                 col_names = dfNames,
+                 skip = 1,
+                 col_types = cols())
   Metabolite <- df$Metabolite
   df %<>% select(all_of(2:ncol(df))) %>% t() %>%
     as_tibble(.name_repair = "minimal") %>% setNames(Metabolite)
@@ -20,7 +23,10 @@ readAnno <- function(assay){
   dfNames <- c("metabolite_name", "SUPER.PATHWAY", "SUB.PATHWAY",
                "PLATFORM", "RI", "MASS", "PUBCHEM",
                 "CAS", "KEGG", "HMDB")
-  df <- read_tsv(dfFile, col_names = dfNames, col_types = cols())
+  df <- read_tsv(dfFile,
+                 col_names = dfNames,
+                 col_types = cols(),
+                 skip = 1)
   df %<>% mutate(Assay = assay)
   return(df)
 }
