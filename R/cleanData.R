@@ -60,10 +60,10 @@ pca <- prcomp(dataMin)
 scores <- pca$x
 mah <- sqrt(rowSums((t(t(scores) / pca$sdev))^2))
 dfMah <- tibble(dist = mah)
-dfMah %>% ggplot(aes(y = dist)) +
+dfMah %>% ggplot(aes(x = dist)) +
   geom_boxplot() +
-  ylab("Mahalanobis Distance")
-ggsave("results/outliers.png")
+  xlab("Mahalanobis Distance")
+ggsave("results/outliers.png", width=7, height = 4)
 data <- data[-which.max(mah),]
 
 ##### Format and save data ####

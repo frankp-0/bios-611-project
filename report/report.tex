@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage{amsmath,amsfonts,amsthm}
+\usepackage{graphicx}
+\graphicspath{ {results/} }
+
+\begin{document}
+\section*{Results}
+
+\input{results/phenoSummary.tex}
+
+\begin{figure}
+  \caption{Boxplot of Mahalanobis Distance}
+  \includegraphics[width=12cm]{outliers.png}
+  \centering
+  \label{fig:mahDist}
+  \end{figure}
+
+\begin{figure}
+  \caption{Metabolites Summary}
+  \includegraphics[width=\textwidth]{metaboliteCount.png}
+  \centering
+  \label{fig:metabSum}
+  \end{figure}
+
+\begin{figure}
+  \caption{\% Missing By Superpathway}
+  \includegraphics[width=\textwidth]{pathSummary.png}
+  \centering
+  \label{fig:pathMiss}
+  \end{figure}
+
+\end{document}

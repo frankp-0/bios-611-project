@@ -3,20 +3,14 @@ PHONY : getData
 PHONY : cleanData
 PHONY : summarize
 
+#### USE THESE TARGETS TO RUN WORKFLOW ####
 # "reset" project
 clean :
 	rm -rf sourceData/*
 	rm -rf interData/*
 	rm -rf results/*
 
-# creates necessary directories
-.created-dirs :
-	mkdir -p sourceData
-	mkdir -p interData
-	mkdir -p results
-	touch .created-dirs
-
-# phony target used to get source data
+# acquire source data
 getData : src/getData.sh .created-dirs\
 	sourceData/neg.txt \
 	sourceData/neg_metadata.txt \
@@ -27,6 +21,25 @@ getData : src/getData.sh .created-dirs\
 	sourceData/pos_late.txt \
 	sourceData/pos_polar_metadata.txt \
 	sourceData/study_design.txt \
+
+# clean data
+cleanData : interData/data.tsv interData/anno.tsv interData/pheno.tsv
+
+# summarize data
+summarize : results/outliers.png results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png
+
+# generate report
+report : report/report.pdf
+
+
+
+#### DO NOT USE THESE TARGETS ####
+# creates necessary directories
+.created-dirs :
+	mkdir -p sourceData
+	mkdir -p interData
+	mkdir -p results
+	touch .created-dirs
 
 # gets source data. use "getData" phony target when running make
 sourceData/neg.txt \
@@ -40,8 +53,6 @@ sourceData/neg.txt \
 	sourceData/study_design.txt :
 		bash src/getData.sh
 
-# phony target used to clean data
-cleanData : interData/data.tsv interData/anno.tsv interData/pheno.tsv
 
 # cleans and combines source metabolomic data
 # combines annotation data
@@ -57,12 +68,16 @@ interData/data.tsv interData/anno.tsv interData/pheno.tsv : R/cleanData.R .creat
 	sourceData/pos_polar_metadata.txt
 		Rscript R/cleanData.R
 
-# phony target used to summarize data
-summarize : results/pathSummary.png results/metaboliteCount.png
-
 # generates figures summarizing missingness in cleaned data
-results/pathSummary.png results/metaboliteCount.png : R/summarize.R .created-dirs \
+results/outliers.png results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png : R/summarize.R .created-dirs \
 	interData/anno.tsv \
 	interData/data.tsv \
 	interData/pheno.tsv
 		Rscript R/summarize.R
+
+report/report.pdf : report/report.tex .created-dirs \
+	results/phenoSummary.tex \
+	results/pathSummary.png \
+	results/metaboliteCount.png \
+	results/outliers.png
+		pdflatex report/report.tex --output-directory report/

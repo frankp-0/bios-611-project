@@ -7,3 +7,5 @@ RUN apt update && apt install -y \
 RUN R -e 'install.packages(c("reprex", "rvest", "xml2"))'
 RUN R -e 'install.packages("tidyverse")'
 RUN R -e 'install.packages("gt")'
+RUN apt update && apt install -y libfontconfig1-dev
+RUN R -e 'install.packages("vtable")'
