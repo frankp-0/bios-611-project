@@ -9,3 +9,6 @@ RUN R -e 'install.packages("tidyverse")'
 RUN R -e 'install.packages("gt")'
 RUN apt update && apt install -y libfontconfig1-dev
 RUN R -e 'install.packages("vtable")'
+RUN apt update && apt install -y pandoc
+RUN apt update && apt install -y texlive-latex-extra
+RUN apt update && apt install -y texlive-extra-utils

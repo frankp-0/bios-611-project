@@ -26,7 +26,7 @@ getData : src/getData.sh .created-dirs\
 cleanData : interData/data.tsv interData/anno.tsv interData/pheno.tsv
 
 # summarize data
-summarize : results/outliers.png results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png
+summarize : results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png
 
 # generate report
 report : report/report.pdf
@@ -57,7 +57,7 @@ sourceData/neg.txt \
 # cleans and combines source metabolomic data
 # combines annotation data
 # use cleanData target when running make
-interData/data.tsv interData/anno.tsv interData/pheno.tsv : R/cleanData.R .created-dirs \
+interData/data.tsv interData/anno.tsv interData/pheno.tsv  results/outliers.png : R/cleanData.R .created-dirs \
 	sourceData/neg.txt \
 	sourceData/neg_metadata.txt \
 	sourceData/polar.txt \
@@ -69,7 +69,7 @@ interData/data.tsv interData/anno.tsv interData/pheno.tsv : R/cleanData.R .creat
 		Rscript R/cleanData.R
 
 # generates figures summarizing missingness in cleaned data
-results/outliers.png results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png : R/summarize.R .created-dirs \
+results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png : R/summarize.R .created-dirs \
 	interData/anno.tsv \
 	interData/data.tsv \
 	interData/pheno.tsv
@@ -80,4 +80,4 @@ report/report.pdf : report/report.tex .created-dirs \
 	results/pathSummary.png \
 	results/metaboliteCount.png \
 	results/outliers.png
-		pdflatex report/report.tex --output-directory report/
+		cd report; pdflatex report.tex

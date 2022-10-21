@@ -12,8 +12,8 @@ cd bios-611-project/
 Next, build and run a Docker container using the provided Dockerfile.
 
 ``` sh
-docker build -t bios611project
-docker run --rm -v $(pwd):/home/ -w /home/ -it metabolomics /bin/bash
+docker build . -t bios611project
+docker run --rm -v $(pwd):/home/ -w /home/ -it bios611project /bin/bash
 ```
 
 If you are unfamiliar with Docker, this tool generates an isolated user space which (ostensibly) has all the depencies required to exactly repeat my analysis.
