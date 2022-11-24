@@ -2,6 +2,7 @@ PHONY : clean
 PHONY : getData
 PHONY : cleanData
 PHONY : summarize
+PHONY : gsea
 
 #### USE THESE TARGETS TO RUN WORKFLOW ####
 # "reset" project
@@ -27,6 +28,9 @@ cleanData : interData/data.tsv interData/anno.tsv interData/pheno.tsv
 
 # summarize data
 summarize : results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png
+
+# GSEA
+gsea : results/gsea.png
 
 # generate report
 report : report/report.pdf
@@ -74,6 +78,12 @@ results/phenoSummary.tex results/pathSummary.png results/metaboliteCount.png : R
 	interData/data.tsv \
 	interData/pheno.tsv
 		Rscript R/summarize.R
+
+results/gsea.png : R/gsea.R .created-dirs \
+	interData/anno.tsv \
+	interData/data.tsv \
+	interData/pheno.tsv
+		Rscript R/gsea.R
 
 report/report.pdf : report/report.tex .created-dirs \
 	results/phenoSummary.tex \
