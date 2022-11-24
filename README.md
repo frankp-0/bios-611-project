@@ -1,5 +1,5 @@
 # Introduction
-This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. For this project, I intend to analyze data from the Plasma Metabolomic Signatures of COPD Study (doi: 10.21228/M8FQ2X). My primary goals are to 1) identify associations between metabolites and age, sex, BMI, COPD status, and smoker status and 2) investigate how different imputation strategies affect these associations. This project is in an intermediate state, but complete analyses and a report will soon follow.
+This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. For this project, I intend to analyze data from the Plasma Metabolomic Signatures of COPD Study (doi: 10.21228/M8FQ2X). My goal is to identify metabolomic changes associated with COPD status.
 
 # Docker
 This analysis can be run on any machine using Docker. First, download this repository to a new directory on your machine.
