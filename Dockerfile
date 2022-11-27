@@ -14,4 +14,5 @@ RUN apt update && apt install -y texlive-latex-extra
 RUN apt update && apt install -y texlive-extra-utils
 RUN R -e 'install.packages("BiocManager")'
 RUN R -e 'BiocManager::install("clusterProfiler")'
-Run R -e 'BiocManager::install("mixOmics")'
+RUN R -e 'BiocManager::install("mixOmics")'
+RUN R -e 'install.packages("pheatmap")'
