@@ -1,7 +1,6 @@
 library(tidyverse)
 library(magrittr)
 library(mixOmics)
-library(gt)
 
 data <- read_tsv("interData/data.tsv")
 anno <- read_tsv("interData/anno.tsv")
@@ -40,8 +39,12 @@ dfVip <- tibble(VIP = VIP,
                 )
 dfVip %<>% mutate(Metabolite = factor(Metabolite, levels = Metabolite))
 dfVip <- dfVip[order(VIP, decreasing = TRUE),]
-vipTab <- gt(dfVip[1:15,])
-vipTab %>% as_latex() %>% as.character() %>% write("results/vip.tex")
+dfVip[1:15,] %>%
+  kableExtra::kable(
+                format = "latex",
+                caption = "Table caption \\label{tab:vip}") %>%
+  kableExtra::kable_styling(latex_options = "scale_down") %>%
+  write("results/vip.tex")
 
 png("results/indiv.png")
 plotIndiv(mod, ellipse = TRUE)

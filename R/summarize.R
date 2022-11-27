@@ -38,5 +38,6 @@ ggsave("results/pathSummary.png", width = 7, height = 4)
 pheno %<>% mutate(across(where(is.character), as.factor))
 phenoTab <- vtable::sumtable(pheno, out = "latex",
                              file = "results/phenoSummary.tex",
-                             title = "Phenotype Summary"
+                             title = "Phenotype Summary",
+                             anchor = "tab:phensum"
                              )
