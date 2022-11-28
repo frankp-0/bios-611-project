@@ -1,6 +1,8 @@
 library(tidyverse)
 library(magrittr)
 
+set.seed(987137)
+
 data <- read_tsv("interData/data.tsv")
 anno <- read_tsv("interData/anno.tsv")
 anno <- anno[order(anno$SUPER.PATHWAY),]

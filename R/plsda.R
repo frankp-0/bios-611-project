@@ -2,6 +2,8 @@ library(tidyverse)
 library(magrittr)
 library(mixOmics)
 
+set.seed(131523)
+
 data <- read_tsv("interData/data.tsv")
 anno <- read_tsv("interData/anno.tsv")
 anno <- anno[order(anno$SUPER.PATHWAY),]
