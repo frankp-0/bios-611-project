@@ -1,60 +1,101 @@
 \documentclass{article}
 \usepackage{amsmath,amsfonts,amsthm}
 \usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{subcaption}
 \graphicspath{ {../results/} }
 \usepackage[margin=1in]{geometry}
 
+\onehalfspacing
 \begin{document}
+\author{Frank Ockerman}
+\title{BIOS 611 Project}
+\maketitle
+\tableofcontents
+
+\section*{Abstract}
+
+\addcontentsline{toc}{section}{Abstract}
+
+\section*{Introduction}
+
+\addcontentsline{toc}{section}{Introduction}
+
+\section*{Methods}
+\addcontentsline{toc}{section}{Methods}
+\subsection*{Data Cleaning and Exploration}
+After combining data across assays and removing metabolites with greater than 50\% missingness, I imputed missing values using the minimum observed value for each metabolite. I then performed \(\log_{10}\) transformation and standardization on each metabolite. Upon visual inspection, this produced distributions with approximately Gaussian distributions for most metabolites. I obtained the principal component projection of the metabolomic data and used this to calculate the Mahalanobis distance for each subject. Briefly, Mahalanobis distance extends the concept of a standard deviation to summarize how far a subject is from the center of a multivariate Gaussian distribution. Based on the boxplot of these Mahalanobis distances (Figure \ref{fig:mahDist}), I identified a clear outlier, which I removed from subsequent analyses. After removing this subject, I repeated the transformation and standardization step on the original data.
+
+\begin{figure}
+  \centering
+  \caption{Boxplot of Mahalanobis Distance}
+  \includegraphics[width=12cm]{outliers.png}
+  \label{fig:mahDist}
+  \end{figure}
+
 \section*{Results}
+\addcontentsline{toc}{section}{Results}
+
+\subsection*{Descriptive Analysis}
+A descriptive summary of the phenotypic data is provided in Table \ref{tab:phensum}. I observed a case-control imbalance, with 374 controls to 262 cases. A minority (33.5\%) of subjects were current smokers, and the remainder were classified as former smokers. The majority of subjects (75.9\%) self-identified as White, and a substantial minority (19\%) identifed as African American, and a small percentage of participants were recorded as American Indian, Alaskan Native, Asian, or Mixed race. Nearly 75\% of subjects had BMI \(>\) 25.0, a crude indicator that they are overweight. A small majority (53.9\%) of participants are male.
+
+A boxplot summarizing the number of metabolites in each super-pathway, colored by assay type, is provided in Figure \ref{fig:metabSum}. A plurality (N=231) of metabolites are involved in lipid metabolism. The other large super-pathway is amino acid metabolism (N=209). 130 metabolites are xenobiotics, a broad class which encompasses foreign chemicals that are not naturally produced by the body, such as pharmaceuticals. Xenobiotics are notable for having substantially greater missingness than other super-pathways \ref{fig:pathMiss}. Among xenobiotics with less than 50\% missingness, I observed a median missingness of 13.42\%. The super-pathway with the next highest median missingness was peptides (8.1\%).
 
 \input{../results/phenoSummary.tex}
 
 \begin{figure}
-  \caption{Boxplot of Mahalanobis Distance}
-  \includegraphics[width=12cm]{outliers.png}
   \centering
-  \label{fig:mahDist}
-  \end{figure}
-
-\begin{figure}
   \caption{Metabolites Summary}
-  \includegraphics[width=\textwidth]{metaboliteCount.png}
-  \centering
+  \includegraphics[width=0.9\textwidth]{metaboliteCount.png}
   \label{fig:metabSum}
   \end{figure}
 
 \begin{figure}
+  \centering
   \caption{\% Missing By Superpathway}
   \includegraphics[width=\textwidth]{pathSummary.png}
-  \centering
   \label{fig:pathMiss}
   \end{figure}
 
+\subsection*{Clustering Analysis}
+The heatmap of metabolite correlations is provided in Figure \ref{fig:heat}. Two clusters of highly-correlated lipid-related metabolites are obvious, corresponding to blocks at the upper left and bottom right corners of the map. Another block of highly-correlated xenobiotics is observed towards the center of the map. The structured, pathway-specific patterns of highly-correlated metabolites indicate that multicollinearity is an important concern for multivariate modelling approaches. The plot of the principal components of metabolomic variation \ref{fig:pca} does not reveal any obvious clusters among the participants, and I do not identify any obvious trend in the principal components by COPD status.
+
 \begin{figure}
-  \caption{Metabolite Correlation Heatmap}
-  \includegraphics[width=\textwidth]{heat.png}
   \centering
+  \caption{Metabolite Correlation Heatmap}
+  \includegraphics[width=0.7\textwidth]{heat.png}
   \label{fig:heat}
   \end{figure}
 
 \begin{figure}
   \caption{Metabolite Principal Components}
-  \includegraphics[width=\textwidth]{pca.png}
+  \includegraphics[width=0.7\textwidth]{pca.png}
   \centering
   \label{fig:pca}
   \end{figure}
 
+\subsection*{Statistical Analysis}
+
+The cross-validated classification error rate of the SPLS-DA model, for varying numbers of latent components, is reported in Figure \ref{fig:perf}. It appears that the accuracy of the model does not improve substantially after 2 components are introduced. This pattern appears to hold whether discriminant analysis is performed using maximum, centroids, or Mahalanobis distance. In our case, there is a slight case-control imbalance (41.2\% cases), but the patterns holds when adjusting for this imbalance with BER. For subsequent analyses, I restrict myself to 2 latent components.
+
+Plotting the cross-validated ROC curve for predicting COPD (Figure \ref{fig:roc}, I observe an inflection point at which the sensitivity is 90\% and the specificity is 60\%. If I instead prioritize specificity, I observe a sensitivity of 40\% for a corresponding specificity of 90\%. The total area under the curve is 0.79. A more qualitative way of characterizing SPLS-DA model performance is to plot individuals according to their projection onto the first two latent variables. This plot is provided in Figure \ref{fig:indiv}, with individuals colored according to COPD status, overlaid onto the model's 95\% confidence ellipses. There is substantial overlap in the confidence ellipses for cases and controls, although cases on average are more represented in the bottom right quadrant of the plot.
+
+The relative importance of each metabolite in the SPLS-DA model can be captured using the VIP (Variable Importance in the Projection) metric. A predictor with VIP greater than 1 is considered important in the model. I report the 15 metabolites with the highest VIP in Table \ref{tab:vip}. While I have not done a full literature review of previous COPD-metabolomic associations and have limited domain knowledge of COPD, several metabolites in this table grab my attention. VMA, the metabolite with the highest VIP, is a byproduct of the breakdown of epinephrine and norepinephrine, and as such is associated with physiological stress \cite{chapman29OrganicAcid2020}. While there may be some link between stress and COPD flare-ups \cite{COPDManagingStress}, this relationship is poorly understand and may not underly the association between VMA and COPD status in this cohort. Another metabolite in this table which stands out is thyroxine, an important hormone secreted by the thyroid. Thyroid dysfunction is known to be associated with COPD, although the mechanism and causal direction is unclear \cite{milkowska-dymanowskaThyroidGlandChronic2017}. Finally, it is worth noting the appearance of theophylline in this table. Theophylline is a common drug prescribed to treat the symptoms of COPD \cite{TheophyllineMedlinePlusDrug}. In this case, we know for certain the causal direction: use of theophylline is a response to COPD diagnosis. Although it is not a useful prognosticator of COPD status, it is encouraging to see our model identifying a metabolite which is unambiguously associated with COPD.
+
+The GSEA analysis results are given in Figure \ref{fig:gsea}. We identify three enriched metabolomic sub-pathways for COPD status: pregnenolone steroids, androgenic steroids, and xanthine metabolism. I found that a number of metabolites categorized into the Xanthine metabolism sub-pathway were closely related to theophylline, indicating the result for this pathway may be spurious. There is some limited evidence implicating sex-related hormones, among which pregnenolone and androgenic steroids would be included, with COPD \cite{tamRoleFemaleHormones2011}.
+
 \begin{figure}
-  \caption{PLS-DA Performance}
-  \includegraphics[width=\textwidth]{plsdaPerf.png}
+  \caption{PLS-DA Performance for Classifying COPD Status}
+  \includegraphics[width=0.7\textwidth]{plsdaPerf.png}
   \centering
   \label{fig:perf}
   \end{figure}
 
-
 \begin{figure}
   \caption{PLS-DA ROC Curve}
-  \includegraphics[width=\textwidth]{roc.png}
+  \includegraphics[width=0.7\textwidth]{roc.png}
   \centering
   \label{fig:roc}
   \end{figure}
@@ -63,17 +104,24 @@
 
 \begin{figure}
   \caption{PLS-DA Individuals Plot}
-  \includegraphics[width=\textwidth]{indiv.png}
+  \includegraphics[width=0.7\textwidth]{indiv.png}
   \centering
   \label{fig:indiv}
   \end{figure}
 
 \begin{figure}
   \caption{GSEA Analysis: Enriched Subpathways}
-  \includegraphics[width=\textwidth]{gsea.png}
+  \includegraphics[width=0.7\textwidth]{gsea.png}
   \centering
   \label{fig:gsea}
   \end{figure}
 
+
+\section*{Discussion}
+
+\addcontentsline{toc}{section}{Discussion}
+
+\bibliographystyle{plain}
+\bibliography{./references.bib}
 
 \end{document}
