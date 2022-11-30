@@ -1,5 +1,5 @@
 # Introduction
-This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. For this project, I intend to analyze data from the Plasma Metabolomic Signatures of COPD Study (doi: 10.21228/M8FQ2X). My goal is to identify metabolomic changes associated with COPD status.
+This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. For this project, I intend to analyze data from the The Subpopulations and Intermediate Outcome Measures in COPD Study (SPIROMICS). My goal is to identify metabolomic changes associated with COPD status.
 
 # Docker
 This analysis can be run on any machine using Docker. First, download this repository to a new directory on your machine.
