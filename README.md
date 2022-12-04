@@ -1,8 +1,8 @@
 # Introduction
-This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. For this project, I intend to analyze data from the The Subpopulations and Intermediate Outcome Measures in COPD Study (SPIROMICS). My goal is to identify metabolomic changes associated with COPD status.
+This repository contains code for my final project in the course Biostatistics 611 (Introduction to Data Science) at UNC Chapel Hill. In this project, I analyze publicly available data from the The Subpopulations and Intermediate Outcome Measures in COPD Study (SPIROMICS). My goal is to identify metabolomic changes associated with COPD status.
 
 # Docker
-This analysis can be run on any machine using Docker. First, download this repository to a new directory on your machine.
+The code for this project can be run on any machine using Docker. First, download this repository to a new directory on your machine.
 
 ``` sh
 git clone https://github.com/frankp-0/bios-611-project.git
