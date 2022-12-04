@@ -2,8 +2,9 @@ library(tidyverse)
 library(magrittr)
 library(mixOmics)
 
-set.seed(131523)
+set.seed(131523) # make reproducible
 
+#### Read data ####
 data <- read_tsv("interData/data.tsv")
 anno <- read_tsv("interData/anno.tsv")
 anno <- anno[order(anno$SUPER.PATHWAY),]
@@ -12,19 +13,22 @@ pheno <- pheno[order(pheno$SAMPLE_NAME),]
 data <- data[order(data$ID),] %>% dplyr::select(-ID)
 data <- data %>% dplyr::select(all_of(anno$metabolite_name))
 
+#### Standardize data ####
 data %<>% mutate_all(function(x) ifelse(is.na(x), min(x, na.rm = T), x))
 data %<>% mutate_all(function(x) log(x+1))
 data %<>% mutate_all(function(x) (x-mean(x))/sd(x))
 
+
+#### S-PLSDA model ####
 data %<>% filter(!is.na(pheno$COPD))
 pheno <- pheno %>% filter(!is.na(COPD))
-
 Y <- pheno$COPD %>% as.factor()
 mod <- mixOmics::splsda(X = data, Y = Y, ncomp = 10)
+
+#### Assess performance ####
 perfo <- perf(mod, validation = "Mfold",
               folds = 5, nrepeat = 10,
               progressBar = TRUE, auc = TRUE)
-
 png("results/roc.png")
 auroc(mod, roc.comp = 2)
 dev.off()
@@ -33,6 +37,7 @@ png("results/plsdaPerf.png")
 plot(perfo)
 dev.off()
 
+#### VIP table ####
 VIP <- vip(mod)[,1] %>% unlist() %>% unname()
 dfVip <- tibble(VIP = VIP,
                 Metabolite = anno$metabolite_name,
